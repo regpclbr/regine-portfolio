@@ -1,0 +1,219 @@
+/* Fraunces loaded as a variable font (weight range) so the italic name can shift weight on hover */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Outfit:wght@300;400;500;600&display=swap');
+@import 'tailwindcss';
+@import 'lenis/dist/lenis.css';
+
+/*
+ * ─────────────────────────────────────────────────────────────────────────────
+ *  COLOR TOKENS — the whole palette lives here. Each token becomes a Tailwind
+ *  utility: --color-ink → text-ink / bg-ink / border-ink / stroke-ink / fill-ink
+ *  (opacity works too: bg-ink/10). JS reads them as var(--color-*).
+ * ─────────────────────────────────────────────────────────────────────────────
+ */
+@theme inline {
+  /* butter backgrounds */
+  --color-sun-top: #FBEFB5;   /* main bg gradient start */
+  --color-sun: #F9E8A0;       /* main bg gradient end */
+  --color-cream: #FFF8DC;     /* light surfaces, cards, glass chips */
+  --color-butter: #F4D97B;    /* deeper accent sections */
+  --color-peach: #FCE9B8;     /* pale peach-cream alternate sections */
+  --color-highlight: #FFE9A0; /* hover tints */
+  /* little accents — use sparingly */
+  --color-blush: #F4C6C0;
+  --color-apricot: #F7C99B;
+  /* text */
+  --color-ink: #4A4036;       /* headings & dark buttons (warm charcoal-brown) */
+  --color-ink-deep: #3A322A;  /* dark button hover */
+  --color-body: #6B5D4F;      /* body text — ≥ 4.5:1 on every yellow surface */
+  --color-honey: #7A561A;     /* small accent labels (AA on cream & butter) */
+
+  /* warm shadows (never gray) */
+  --shadow-warm: 0 10px 28px -10px rgba(180, 140, 40, 0.15), 0 2px 6px rgba(180, 140, 40, 0.08);
+  --shadow-warm-lg: 0 18px 40px -14px rgba(180, 140, 40, 0.28), 0 4px 10px rgba(180, 140, 40, 0.12);
+
+  /* legacy aliases */
+  --color-background: var(--color-cream);
+  --color-foreground: var(--color-ink);
+  --color-primary: var(--color-ink);
+  --color-accent: var(--color-apricot);
+  --color-border: var(--color-butter);
+
+  --font-sans: 'Outfit', sans-serif;
+  --font-serif: 'Fraunces', serif;
+}
+
+/* soft butter gradient used for the hero and main sections */
+@utility bg-sunshine {
+  background-image: linear-gradient(170deg, var(--color-sun-top) 0%, var(--color-sun) 100%);
+}
+
+/* Mirror of EASE in src/config/motion.ts */
+:root {
+  --ease-signature: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html, body, #root {
+  height: 100%;
+  scroll-behavior: smooth;
+}
+
+/* Lenis handles smoothing itself — native smooth scroll would fight it */
+html.lenis {
+  scroll-behavior: auto;
+}
+
+/* Scroll lock during the preloader */
+html.is-locked,
+html.is-locked body {
+  overflow: hidden;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+  font-family: 'Outfit', sans-serif;
+  overflow-x: clip;
+}
+
+::selection { background: var(--color-highlight); color: var(--color-ink); }
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-butter); border-radius: 2px; }
+
+/* ── Custom cursor: hide the native one only when ours is mounted ─────────── */
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none !important;
+}
+
+/* ── Hero ─────────────────────────────────────────────────────────────────── */
+/* italic “Paclibar” subtly gains weight and leans in on hover */
+.name-italic {
+  display: inline-block;
+  font-weight: 400;
+  transform-origin: left bottom;
+  transition: font-weight 0.7s var(--ease-signature), transform 0.7s var(--ease-signature);
+}
+@media (hover: hover) {
+  .name-italic:hover {
+    font-weight: 560;
+    transform: skewX(-6deg);
+  }
+}
+
+/* soft cream glassmorphism chip with a warm shadow */
+.glass-chip {
+  background: color-mix(in srgb, var(--color-cream) 68%, transparent);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  box-shadow: 0 10px 28px -8px rgba(180, 140, 40, 0.15), 0 2px 6px rgba(180, 140, 40, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  -webkit-backdrop-filter: blur(12px) saturate(1.15);
+  backdrop-filter: blur(12px) saturate(1.15);
+}
+
+/* die-cut sticker: white edge + soft warm drop shadow */
+.sticker-shadow {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85), 0 6px 14px -6px rgba(150, 110, 30, 0.28), 0 1px 3px rgba(150, 110, 30, 0.12);
+}
+
+/* Phosphor duotone: recolor the secondary (20% opacity) layer with a theme token */
+.duo-icon svg [opacity] { opacity: 1; }
+.duo-apricot svg [opacity] { fill: var(--color-apricot); }
+.duo-blush svg [opacity] { fill: var(--color-blush); }
+
+/* horizontal scrollers without a visible scrollbar */
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* ── Portfolio coverflow ──────────────────────────────────────────────────── */
+/* butter tint over the blurred background: yellow at the top/bottom (for the text),
+   the moody blurred artwork shows through behind the cards */
+.portfolio-tint {
+  background: linear-gradient(
+    180deg,
+    var(--color-sun-top) 0%,
+    color-mix(in srgb, var(--color-sun-top) 88%, transparent) 22%,
+    color-mix(in srgb, var(--color-butter) 28%, transparent) 50%,
+    color-mix(in srgb, var(--color-sun) 85%, transparent) 82%,
+    var(--color-sun) 100%
+  );
+}
+
+/* reflection under the active card (Chromium/Safari; ignored elsewhere) */
+.cover-reflect {
+  -webkit-box-reflect: below 10px linear-gradient(transparent 80%, rgba(255, 248, 220, 0.24));
+}
+
+/* cute press/hover details */
+@media (hover: hover) {
+  .group:hover .wiggle-x {
+    animation: wiggle-x 0.7s var(--ease-signature);
+  }
+}
+
+/* ── Keyframes ────────────────────────────────────────────────────────────── */
+@keyframes breathe-opacity {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
+}
+
+/* Line grows downward, then retracts out the bottom while fading */
+@keyframes scroll-line {
+  0% { opacity: 0; transform: scaleY(0); transform-origin: top; }
+  15% { opacity: 1; }
+  50% { opacity: 1; transform: scaleY(1); transform-origin: top; }
+  51% { transform: scaleY(1); transform-origin: bottom; }
+  100% { opacity: 0; transform: scaleY(0); transform-origin: bottom; }
+}
+
+/* Soft glowing pulse for status dots */
+@keyframes dot-glow {
+  0% { box-shadow: 0 0 0 0 rgba(74, 64, 54, 0.4); }
+  70% { box-shadow: 0 0 0 7px rgba(74, 64, 54, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(74, 64, 54, 0); }
+}
+
+/* Ambient light drift when there is no mouse (touch / reduced motion) */
+@keyframes blob-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-8%, 6%, 0) scale(1.08); }
+}
+
+/* Tiny decorations twinkle */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.25; transform: scale(0.6) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1) rotate(20deg); }
+}
+
+/* Arrow wiggle */
+@keyframes wiggle-x {
+  0%, 100% { transform: translateX(0); }
+  30% { transform: translateX(4px); }
+  55% { transform: translateX(-1px); }
+  80% { transform: translateX(2px); }
+}
+
+.animate-dot-glow { animation: dot-glow 2.2s ease-out infinite; }
+.animate-blob-drift { animation: blob-drift 18s ease-in-out infinite; }
+.animate-breathe { animation: breathe-opacity 8s ease-in-out infinite; }
+.animate-scroll-line { animation: scroll-line 2.2s cubic-bezier(0.65, 0, 0.35, 1) infinite; }
+.animate-twinkle { animation: twinkle 3.2s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-breathe,
+  .animate-scroll-line,
+  .animate-dot-glow,
+  .animate-blob-drift,
+  .animate-twinkle,
+  .group:hover .wiggle-x {
+    animation: none !important;
+  }
+
+  .name-italic {
+    transition: none;
+  }
+}

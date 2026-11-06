@@ -1,0 +1,11 @@
+{
+  "title": "Regine Paclibar",
+  "description": "Showcase professional skills and project portfolios with a modern, mobile-friendly site featuring categorized galleries and easy contact options.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
